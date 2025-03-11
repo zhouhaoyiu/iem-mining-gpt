@@ -1,5 +1,6 @@
 import type { UserModule } from './types'
 import Previewer from 'element-plus'
+import { createPinia } from 'pinia'
 
 // import "~/styles/element/index.scss";
 
@@ -29,6 +30,8 @@ export const createApp = ViteSSG(
   (ctx) => {
     Object.values(import.meta.glob<{ install: UserModule }>('./modules/*.ts', { eager: true }))
       .forEach(i => i.install?.(ctx))
+    const pinia = createPinia()
+    ctx.app.use(pinia)
     ctx.app.use(Previewer)
   },
 )

@@ -1,11 +1,14 @@
 <script setup lang="ts">
+import axios from 'axios'
+
+axios.defaults.baseURL = 'http://localhost:3000/'
 </script>
 
 <template>
   <el-config-provider namespace="ep">
     <BaseHeader />
     <div class="main-container flex">
-      <div w-full h-full flex items-center justify-center>
+      <div h-full w-full flex items-center justify-center>
         <RouterView />
       </div>
     </div>
@@ -21,5 +24,7 @@
 
 .main-container {
   height: calc(100vh - 10rem);
+  padding: 1rem;
+  background-color: var(--ep-fill-color-light);
 }
 </style>
