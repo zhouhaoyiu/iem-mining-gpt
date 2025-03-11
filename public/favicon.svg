@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- 方法1：通过 y 坐标微调 -->
+  <text x="50%" y="65%" 
+        fill="#000" 
+        font-family="Arial, sans-serif" 
+        font-size="24" 
+        font-weight="bold"
+        text-anchor="middle" 
+        dominant-baseline="middle">Z</text>
+
+  <!-- 方法2：使用 transform 精准控制 -->
+  <!-- <text x="50%" y="50%" 
+           fill="#000" 
+           font-family="Arial, sans-serif" 
+           font-size="24" 
+           font-weight="bold"
+           text-anchor="middle" 
+           dominant-baseline="middle"
+           transform="translate(0 10%)">Z</text> -->
+</svg>
