@@ -4,24 +4,29 @@ import bodyParser from 'koa-bodyparser'
 import Router from 'koa-router'
 import serve from 'koa-static'
 import OpenAI from 'openai'
+import { apiKey } from './apikey.js'
 
 // 2.创建服务端实例对象
 const app = new Koa()
 
 // 使用 bodyParser 中间件
 app.use(bodyParser())
+// 在 当前目录的apikey.js文件 自定义的话请手动创建如下面格式的文件
+// let apiKey = "sk-********************************"
+// export { apiKey }
 
-// 自定义 CORS 配置
+
+
 app.use(cors({
   origin: '*', // 允许所有来源
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // 允许的请求方法
   allowHeaders: ['Content-Type', 'Authorization', 'Accept'], // 允许的请求头
 }))
+console.log(apiKey);
 const openai = new OpenAI({
   baseURL: 'https://api.deepseek.com',
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey
 })
-console.log(openai);
 const router = new Router()
 // 静态资源中间件
 app.use(serve('public')) // 注册处理静态资源的中间件
