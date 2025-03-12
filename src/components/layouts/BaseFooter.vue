@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import axios from 'axios'
 import { ref } from 'vue'
-import { useChatStore } from '~/stores/chatStore'
+import { useChatStore } from '../../stores/chatStore'
 
 const inputMessage = ref('')
 const chatStore = useChatStore()
@@ -29,6 +29,8 @@ async function handleSend() {
 
   inputMessage.value = ''
 }
+
+
 </script>
 
 <template>
@@ -36,20 +38,18 @@ async function handleSend() {
     <div class="footer-content">
       <div class="input-area">
         <el-input
-          v-model="inputMessage"
-          placeholder="请输入您的问题..."
-          type="textarea"
-          :rows="2"
-          :disabled="isSending"
-          @keyup.enter.ctrl="handleSend"
+        v-model="inputMessage"
+        placeholder="请输入您的问题...，Enter 发送"
+        type="textarea"
+        :rows="5"
+        :disabled="isSending"
+        @keyup.enter="handleSend"
+          @keydown.shift.prevent="inputMessage += '\n'"
         />
         <el-button type="primary" :disabled="!inputMessage.trim() || isSending" @click="handleSend">
           发送
         </el-button>
       </div>
-      <span class="title">
-        created by zhy
-      </span>
     </div>
   </div>
 </template>
@@ -57,7 +57,7 @@ async function handleSend() {
 <style lang="scss" scoped>
 .footer {
   background-color: var(--router-view-bg-color);
-  height: 5rem;
+  height: 10rem;
   padding: 0 1rem;
 
   .footer-content {

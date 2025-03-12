@@ -3,6 +3,7 @@ import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
 import Router from 'koa-router'
 import serve from 'koa-static'
+import OpenAI from 'openai'
 
 // 2.创建服务端实例对象
 const app = new Koa()
@@ -16,7 +17,11 @@ app.use(cors({
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // 允许的请求方法
   allowHeaders: ['Content-Type', 'Authorization', 'Accept'], // 允许的请求头
 }))
-
+const openai = new OpenAI({
+  baseURL: 'https://api.deepseek.com',
+  apiKey: process.env.OPENAI_API_KEY,
+})
+console.log(openai);
 const router = new Router()
 // 静态资源中间件
 app.use(serve('public')) // 注册处理静态资源的中间件
@@ -24,7 +29,11 @@ app.use(serve('public')) // 注册处理静态资源的中间件
 // 对话路由
 router.post('/api/chat', async (ctx) => {
   const { message } = ctx.request.body // 确保从 ctx.request.body 获取 message
-  // 模拟AI回复
+  
+// const responseMessage = await openai.chat.completions.create({
+  //   messages: [{ role: 'user', content: message }],
+  //   model: 'deepseek-reasoner',
+  // })
   const responseMessage = `您的问题是 ${message}，我们正在开发相关功能，敬请期待。`
   ctx.body = { reply: responseMessage }
 })

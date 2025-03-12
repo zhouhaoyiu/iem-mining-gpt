@@ -1,6 +1,7 @@
 <script setup>
 import { Delete as deleteIcon } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
+import { marked } from 'marked'
 import { useChatStore } from '~/stores/chatStore'
 
 const chatStore = useChatStore()
@@ -18,7 +19,8 @@ function clearChat() {
         v-for="(message, index) in chatStore.chatHistory" :key="index"
         class="message" :class="[message.role]"
       >
-        {{ message.content }}
+        <span v-if="message.role === 'assistant'" v-html="marked(message.content)" />
+        <span v-else>{{ message.content }}</span>
       </div>
     </div>
     <div class="clear-chat-button" @click="clearChat">
@@ -48,7 +50,24 @@ function clearChat() {
   background-color: var(--ep-bg-color);
   border-radius: 8px;
 }
+.chat-messages::-webkit-scrollbar {
+  width: 4px;
+  margin-right: 3px;
+}
 
+.chat-messages::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
 .message {
   padding: 0.8rem 1rem;
   border-radius: 8px;

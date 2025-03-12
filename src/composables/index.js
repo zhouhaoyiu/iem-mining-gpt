@@ -1,2 +1,2 @@
-export * from './dark';
-//# sourceMappingURL=index.js.map
+export * from './dark'
+// # sourceMappingURL=index.js.map
