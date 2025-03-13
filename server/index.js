@@ -22,7 +22,7 @@ app.use(cors({
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // 允许的请求方法
   allowHeaders: ['Content-Type', 'Authorization', 'Accept'], // 允许的请求头
 }))
-console.log(apiKey);
+
 const openai = new OpenAI({
   baseURL: 'https://api.deepseek.com',
   apiKey
@@ -35,12 +35,13 @@ app.use(serve('public')) // 注册处理静态资源的中间件
 router.post('/api/chat', async (ctx) => {
   const { message } = ctx.request.body // 确保从 ctx.request.body 获取 message
   
-// const responseMessage = await openai.chat.completions.create({
-  //   messages: [{ role: 'user', content: message }],
-  //   model: 'deepseek-reasoner',
-  // })
-  const responseMessage = `您的问题是 ${message}，我们正在开发相关功能，敬请期待。`
-  ctx.body = { reply: responseMessage }
+const responseMessage = await openai.chat.completions.create({
+    messages: [{ role: 'user', content: message }],
+    model: 'deepseek-reasoner',
+  })
+  console.log(responseMessage.choices[0].message.content);
+  // const responseMessage = `您的问题是 ${message}，我们正在开发相关功能，敬请期待。`
+  ctx.body = { reply: responseMessage.choices[0].message.content }
 })
 
 app.use(router.routes()).use(router.allowedMethods())
