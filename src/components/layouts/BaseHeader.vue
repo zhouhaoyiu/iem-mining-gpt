@@ -25,7 +25,6 @@
     font-size: 2rem;
   }
   .author {
-    // 我想让author在header的最右边
     position: absolute;
     right: 1rem;
     font-size: 0.8rem;
