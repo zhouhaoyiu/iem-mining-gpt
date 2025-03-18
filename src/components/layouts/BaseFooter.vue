@@ -17,6 +17,13 @@ async function handleSend() {
   isSending.value = true
 
   try {
+    // const ws = new WebSocket('ws://localhost:3000/chat')
+    // ws.onopen = () => {
+    //   ws.send(messageToSend)
+    // }
+    // ws.onmessage = (event) => {
+    //   chatStore.addMessage('assistant', event.data)
+    // }
     const response = await axios.post('/api/chat', { message: messageToSend })
     chatStore.addMessage('assistant', response.data.reply)
   }
