@@ -15,8 +15,6 @@ app.use(bodyParser())
 // let apiKey = "sk-********************************"
 // export { apiKey }
 
-
-
 app.use(cors({
   origin: '*', // 允许所有来源
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // 允许的请求方法
@@ -25,7 +23,7 @@ app.use(cors({
 
 const openai = new OpenAI({
   baseURL: 'https://api.deepseek.com',
-  apiKey
+  apiKey,
 })
 const router = new Router()
 // 静态资源中间件
@@ -34,12 +32,12 @@ app.use(serve('public')) // 注册处理静态资源的中间件
 // 对话路由
 router.post('/api/chat', async (ctx) => {
   const { message } = ctx.request.body // 确保从 ctx.request.body 获取 message
-  
-const responseMessage = await openai.chat.completions.create({
+
+  const responseMessage = await openai.chat.completions.create({
     messages: [{ role: 'user', content: message }],
     model: 'deepseek-reasoner',
   })
-  console.log(responseMessage.choices[0].message.content);
+  console.log(responseMessage.choices[0].message.content)
   // const responseMessage = `您的问题是 ${message}，我们正在开发相关功能，敬请期待。`
   ctx.body = { reply: responseMessage.choices[0].message.content }
 })
