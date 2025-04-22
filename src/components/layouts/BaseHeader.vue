@@ -5,7 +5,7 @@
 <template>
   <div class="header">
     <span class="title">
-      NEU GPT
+      IEM GPT
     </span>
     <!-- 最右边小字 created by zhy -->
     <span class="author">created by zhy</span>

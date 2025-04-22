@@ -36,8 +36,6 @@ async function handleSend() {
 
   inputMessage.value = ''
 }
-
-
 </script>
 
 <template>
@@ -45,12 +43,12 @@ async function handleSend() {
     <div class="footer-content">
       <div class="input-area">
         <el-input
-        v-model="inputMessage"
-        placeholder="请输入您的问题...，Enter 发送"
-        type="textarea"
-        :rows="5"
-        :disabled="isSending"
-        @keyup.enter="handleSend"
+          v-model="inputMessage"
+          placeholder="请输入您的问题...，Enter 发送"
+          type="textarea"
+          :rows="5"
+          :disabled="isSending"
+          @keyup.enter="handleSend"
           @keydown.shift.prevent="inputMessage += '\n'"
         />
         <el-button type="primary" :disabled="!inputMessage.trim() || isSending" @click="handleSend">
