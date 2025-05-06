@@ -25,7 +25,7 @@
     "concurrently": "^9.1.2",
     "cors": "^2.8.5",
     "element-plus": "^2.9.8",
-    "express": "^4.21.2",
+    "express": "^5.1.0",
     "glob": "^11.0.1",
     "koa": "^2.16.1",
     "koa-bodyparser": "^4.4.1",
