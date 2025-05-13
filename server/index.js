@@ -32,6 +32,7 @@ app.use(serve('public')) // 注册处理静态资源的中间件
 // 对话路由
 router.post('/api/chat', async (ctx) => {
   const { message } = ctx.request.body // 确保从 ctx.request.body 获取 message
+  console.log(message)
 
   const responseMessage = await openai.chat.completions.create({
     messages: [{ role: 'user', content: message }],
