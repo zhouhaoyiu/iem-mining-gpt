@@ -23,8 +23,8 @@ axios.defaults.baseURL = 'http://localhost:3000/'
 }
 
 .main-container {
-  height: calc(100vh - 15rem);
-  padding: 1rem;
+  height: calc(100vh - 18rem);
+  padding: 0.5rem;
   background-color: var(--ep-fill-color-light);
 }
 </style>

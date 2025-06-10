@@ -10,5 +10,14 @@ export const useChatStore = defineStore('chat', () => {
     chatHistory.value.push({ role, content })
   }
 
-  return { chatHistory, addMessage }
+  function updateLastMessage(role: string, content: string): void {
+    const lastMessage = chatHistory.value[chatHistory.value.length - 1]
+    if (lastMessage && lastMessage.role === role) {
+      lastMessage.content = content
+    } else {
+      addMessage(role, content)
+    }
+  }
+
+  return { chatHistory, addMessage, updateLastMessage }
 })
