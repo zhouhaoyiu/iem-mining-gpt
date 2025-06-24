@@ -34,7 +34,7 @@
     "marked": "^15.0.12",
     "openai": "^5.2.0",
     "pinia": "^3.0.3",
-    "vite-plugin-inspect": "^11.1.0",
+    "vite-plugin-inspect": "^11.2.0",
     "vue": "^3.5.16",
     "vue-pdf-embed": "^2.1.2",
     "vue-router": "^4.5.1"
