@@ -51,8 +51,8 @@ importers:
         specifier: ^16.0.0
         version: 16.0.0
       openai:
-        specifier: ^5.8.3
-        version: 5.8.3(ws@8.18.3)(zod@3.24.4)
+        specifier: ^5.9.0
+        version: 5.9.0(ws@8.18.3)(zod@3.24.4)
       pinia:
         specifier: ^3.0.3
         version: 3.0.3(typescript@5.8.3)(vue@3.5.17(typescript@5.8.3))
@@ -2994,8 +2994,8 @@ packages:
     resolution: {integrity: sha512-cxN6aIDPz6rm8hbebcP7vrQNhvRcveZoJU72Y7vskh4oIm+BZwBECnx5nTmrlres1Qapvx27Qo1Auukpf8PKXw==}
     engines: {node: '>=18'}
 
-  openai@5.8.3:
-    resolution: {integrity: sha512-IdotKmquCnpouTRvF9xRXVhMx6K5Sc8zkD6Usf+so+NTQ+qiJ8bLSCd7LBb8b/Rof7uYltlSxJhNp+spphKI4Q==}
+  openai@5.9.0:
+    resolution: {integrity: sha512-cmLC0pfqLLhBGxE4aZPyRPjydgYCncppV2ClQkKmW79hNjCvmzkfhz8rN5/YVDmjVQlFV+UsF1JIuNjNgeagyQ==}
     hasBin: true
     peerDependencies:
       ws: ^8.18.0
@@ -7048,7 +7048,7 @@ snapshots:
       is-inside-container: 1.0.0
       is-wsl: 3.1.0
 
-  openai@5.8.3(ws@8.18.3)(zod@3.24.4):
+  openai@5.9.0(ws@8.18.3)(zod@3.24.4):
     optionalDependencies:
       ws: 8.18.3
       zod: 3.24.4
