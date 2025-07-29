@@ -27,7 +27,7 @@
     "element-plus": "2.10.4",
     "express": "^5.1.0",
     "glob": "^11.0.3",
-    "koa": "^3.0.0",
+    "koa": "^3.0.1",
     "koa-bodyparser": "^4.4.1",
     "koa-router": "^13.1.1",
     "koa-static": "^5.0.0",
