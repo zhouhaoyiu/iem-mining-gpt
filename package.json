@@ -49,7 +49,7 @@
     "@types/koa__router": "^12.0.4",
     "@types/node": "^24.2.0",
     "@unocss/eslint-plugin": "^66.3.3",
-    "@vitejs/plugin-vue": "^6.0.0",
+    "@vitejs/plugin-vue": "^6.0.1",
     "eslint": "^9.32.0",
     "eslint-plugin-format": "^1.0.1",
     "sass": "^1.89.2",
