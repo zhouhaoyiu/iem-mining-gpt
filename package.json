@@ -52,7 +52,7 @@
     "@vitejs/plugin-vue": "^6.0.1",
     "eslint": "^9.33.0",
     "eslint-plugin-format": "^1.0.1",
-    "sass": "^1.90.0",
+    "sass": "^1.91.0",
     "typescript": "^5.9.2",
     "unocss": "^66.4.2",
     "unplugin-vue-components": "^28.8.0",
