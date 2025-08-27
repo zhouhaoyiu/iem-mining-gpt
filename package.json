@@ -31,7 +31,7 @@
     "koa-bodyparser": "^4.4.1",
     "koa-router": "^13.1.1",
     "koa-static": "^5.0.0",
-    "marked": "^16.1.2",
+    "marked": "^16.2.0",
     "openai": "^5.12.2",
     "pinia": "^3.0.3",
     "vite-plugin-inspect": "^11.3.2",
