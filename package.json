@@ -20,7 +20,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
     "@koa/cors": "^5.0.0",
-    "@vueuse/core": "^13.6.0",
+    "@vueuse/core": "^13.8.0",
     "axios": "^1.11.0",
     "concurrently": "^9.2.1",
     "cors": "^2.8.5",
