@@ -48,7 +48,7 @@
     "@types/koa-static": "^4.0.4",
     "@types/koa__router": "^12.0.4",
     "@types/node": "^24.2.1",
-    "@unocss/eslint-plugin": "^66.4.2",
+    "@unocss/eslint-plugin": "^66.5.0",
     "@vitejs/plugin-vue": "^6.0.1",
     "eslint": "^9.34.0",
     "eslint-plugin-format": "^1.0.1",
