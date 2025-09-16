@@ -50,7 +50,7 @@
     "@types/node": "^24.4.0",
     "@unocss/eslint-plugin": "^66.5.1",
     "@vitejs/plugin-vue": "^6.0.1",
-    "eslint": "^9.34.0",
+    "eslint": "^9.35.0",
     "eslint-plugin-format": "^1.0.1",
     "sass": "^1.91.0",
     "typescript": "^5.9.2",
