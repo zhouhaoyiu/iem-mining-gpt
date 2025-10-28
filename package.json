@@ -42,7 +42,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^6.0.0",
     "@iconify-json/ep": "^1.2.3",
-    "@iconify-json/ri": "^1.2.5",
+    "@iconify-json/ri": "^1.2.6",
     "@types/koa": "^3.0.0",
     "@types/koa-router": "^7.4.8",
     "@types/koa-static": "^4.0.4",
