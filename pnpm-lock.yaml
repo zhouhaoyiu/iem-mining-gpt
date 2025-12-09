@@ -82,8 +82,8 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1
       '@types/koa-router':
-        specifier: ^7.4.8
-        version: 7.4.8
+        specifier: ^7.4.9
+        version: 7.4.9
       '@types/koa-static':
         specifier: ^4.0.4
         version: 4.0.4
@@ -1177,8 +1177,8 @@ packages:
   '@types/koa-compose@3.2.9':
     resolution: {integrity: sha512-BroAZ9FTvPiCy0Pi8tjD1OfJ7bgU1gQf0eR6e1Vm+JJATy9eKOG3hQMFtMciMawiSOVnLMdmUOC46s7HBhSTsA==}
 
-  '@types/koa-router@7.4.8':
-    resolution: {integrity: sha512-SkWlv4F9f+l3WqYNQHnWjYnyTxYthqt8W9az2RTdQW7Ay8bc00iRZcrb8MC75iEfPqnGcg2csEl8tTG1NQPD4A==}
+  '@types/koa-router@7.4.9':
+    resolution: {integrity: sha512-YibkqJrFWwwF55YtZo6dORpMj/1zfweHHIZA/qpA+2JPcVbBopAvLjejTcO1ojWAJfzf1tPC+CrPnLDuVRkUEA==}
 
   '@types/koa-send@4.1.6':
     resolution: {integrity: sha512-vgnNGoOJkx7FrF0Jl6rbK1f8bBecqAchKpXtKuXzqIEdXTDO6dsSTjr+eZ5m7ltSjH4K/E7auNJEQCAd0McUPA==}
@@ -4863,7 +4863,7 @@ snapshots:
     dependencies:
       '@types/koa': 3.0.1
 
-  '@types/koa-router@7.4.8':
+  '@types/koa-router@7.4.9':
     dependencies:
       '@types/koa': 3.0.1
 
