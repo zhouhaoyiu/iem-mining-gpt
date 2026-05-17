@@ -4,7 +4,7 @@ import bodyParser from 'koa-bodyparser'
 import Router from 'koa-router'
 import serve from 'koa-static'
 import OpenAI from 'openai'
-import { apiKey } from './apikey.js'
+import { apiKey } from './apiKey.js'
 
 // 2.创建服务端实例对象
 const app = new Koa()
@@ -21,8 +21,11 @@ app.use(cors({
   allowHeaders: ['Content-Type', 'Authorization', 'Accept'], // 允许的请求头
 }))
 
+const deepseekBaseUrl = process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com'
+const deepseekModel = process.env.DEEPSEEK_MODEL || 'deepseek-v4-pro'
+
 const openai = new OpenAI({
-  baseURL: 'https://api.deepseek.com',
+  baseURL: deepseekBaseUrl,
   apiKey,
 })
 const router = new Router()
@@ -44,22 +47,29 @@ router.post('/api/chat', async (ctx) => {
   // 立即发送一个空响应，让客户端知道连接已建立
   ctx.res.write('data: {"content":""}\n\n')
 
-  const stream = await openai.chat.completions.create({
-    messages: [{ role: 'user', content: message }],
-    model: 'deepseek-reasoner',
-    stream: true,
-    temperature: 0.7, // 降低温度以加快响应
-    max_tokens: 1000, // 限制最大token数
-  })
+  try {
+    const stream = await openai.chat.completions.create({
+      messages: [{ role: 'user', content: message }],
+      model: deepseekModel,
+      stream: true,
+      temperature: 0.7, // 降低温度以加快响应
+      max_tokens: 1000, // 限制最大token数
+    })
 
-  for await (const chunk of stream) {
-    const content = chunk.choices[0]?.delta?.content || ''
-    if (content) {
-      ctx.res.write(`data: ${JSON.stringify({ content })}\n\n`)
+    for await (const chunk of stream) {
+      const content = chunk.choices[0]?.delta?.content || ''
+      if (content) {
+        ctx.res.write(`data: ${JSON.stringify({ content })}\n\n`)
+      }
     }
   }
-
-  ctx.res.end()
+  catch (error) {
+    console.error('DeepSeek request failed:', error)
+    ctx.res.write(`data: ${JSON.stringify({ error: 'Upstream connection failed' })}\n\n`)
+  }
+  finally {
+    ctx.res.end()
+  }
 })
 
 app.use(router.routes()).use(router.allowedMethods())
