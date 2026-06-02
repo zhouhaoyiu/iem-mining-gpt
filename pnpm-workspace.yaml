@@ -1,3 +1,7 @@
+allowBuilds:
+  '@parcel/watcher': true
+minimumReleaseAgeExclude:
+  - openai@6.41.0
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - esbuild
