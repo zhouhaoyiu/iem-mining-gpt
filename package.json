@@ -24,7 +24,7 @@
     "axios": "^1.17.0",
     "concurrently": "^10.0.3",
     "cors": "^2.8.6",
-    "element-plus": "2.14.0",
+    "element-plus": "2.14.1",
     "express": "^5.2.1",
     "glob": "^13.0.6",
     "koa": "^3.2.1",
