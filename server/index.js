@@ -4,25 +4,34 @@ import bodyParser from 'koa-bodyparser'
 import Router from 'koa-router'
 import serve from 'koa-static'
 import OpenAI from 'openai'
-import { apiKey } from './apiKey.js'
 
 // 2.创建服务端实例对象
 const app = new Koa()
 
 // 使用 bodyParser 中间件
 app.use(bodyParser())
-// 在 当前目录的apikey.js文件 自定义的话请手动创建如下面格式的文件
-// let apiKey = "sk-********************************"
-// export { apiKey }
+const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5173,http://localhost:3000')
+  .split(',')
+  .map(origin => origin.trim())
+  .filter(Boolean)
 
 app.use(cors({
-  origin: '*', // 允许所有来源
+  origin: (ctx) => {
+    const origin = ctx.get('Origin')
+    return origin && allowedOrigins.includes(origin) ? origin : ''
+  },
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // 允许的请求方法
-  allowHeaders: ['Content-Type', 'Authorization', 'Accept'], // 允许的请求头
+  allowHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Chat-Token'], // 允许的请求头
 }))
 
 const deepseekBaseUrl = process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com'
 const deepseekModel = process.env.DEEPSEEK_MODEL || 'deepseek-v4-pro'
+const apiKey = process.env.DEEPSEEK_API_KEY || process.env.OPENAI_API_KEY
+const chatApiToken = process.env.CHAT_API_TOKEN
+const requireChatToken = process.env.NODE_ENV === 'production' || Boolean(chatApiToken)
+
+if (!apiKey)
+  throw new Error('DEEPSEEK_API_KEY or OPENAI_API_KEY is required')
 
 const openai = new OpenAI({
   baseURL: deepseekBaseUrl,
@@ -34,6 +43,12 @@ app.use(serve('public')) // 注册处理静态资源的中间件
 
 // 对话路由
 router.post('/api/chat', async (ctx) => {
+  if (requireChatToken && (!chatApiToken || ctx.get('x-chat-token') !== chatApiToken)) {
+    ctx.status = 401
+    ctx.body = 'Unauthorized'
+    return
+  }
+
   const { message } = ctx.request.body
   console.log(message)
 

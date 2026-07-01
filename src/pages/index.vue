@@ -32,10 +32,27 @@ function clearChat() {
 
 // 自定义渲染器
 const renderer = new marked.Renderer()
-renderer.code = (code, language) => {
-  return `<pre class="code-block"><code class="language-${language}">${code}</code></pre>`
+renderer.code = ({ text, lang }) => {
+  return `<pre class="code-block"><code class="language-${escapeHtml(lang || '')}">${escapeHtml(text)}</code></pre>`
+}
+renderer.html = ({ text }) => {
+  return escapeHtml(text)
 }
 marked.use({ renderer })
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    '\'': '&#39;',
+  }[char]))
+}
+
+function renderAssistant(content) {
+  return marked(content)
+}
 </script>
 
 <template>
@@ -48,7 +65,7 @@ marked.use({ renderer })
         class="message"
         :class="[message.role]"
       >
-        <div v-if="message.role === 'assistant'" class="message-content" v-html="marked(message.content)" />
+        <div v-if="message.role === 'assistant'" class="message-content" v-html="renderAssistant(message.content)" />
         <div v-else class="message-content">
           {{ message.content }}
         </div>
