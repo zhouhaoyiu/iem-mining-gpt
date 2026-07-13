@@ -1,7 +1,7 @@
 import cors from '@koa/cors'
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
-import Router from 'koa-router'
+import Router from '@koa/router'
 import serve from 'koa-static'
 import OpenAI from 'openai'
 
