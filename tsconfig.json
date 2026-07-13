@@ -4,17 +4,14 @@
     "jsx": "preserve",
     "lib": ["esnext", "dom"],
     "useDefineForClassFields": true,
-    "ignoreDeprecations": "6.0",
-    "baseUrl": ".",
     "module": "esnext",
     "moduleResolution": "bundler",
     "paths": {
-      "~/*": ["src/*"]
+      "~/*": ["./src/*"]
     },
     "resolveJsonModule": true,
     "types": [
-      "vite/client",
-      "unplugin-vue-router/client"
+      "vite/client"
     ],
     "strict": true,
     "sourceMap": true,

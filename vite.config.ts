@@ -4,10 +4,9 @@ import Vue from '@vitejs/plugin-vue'
 import Unocss from 'unocss/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
-import VueRouter from 'unplugin-vue-router/vite'
 import { defineConfig } from 'vite'
-
 import Inspect from 'vite-plugin-inspect'
+import VueRouter from 'vue-router/vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -28,11 +27,11 @@ export default defineConfig({
 
   plugins: [
     Inspect(),
-    Vue(),
     VueRouter({
       extensions: ['.vue', '.md'],
-      dts: 'src/typed-router.d.ts',
+      dts: 'src/route-map.d.ts',
     }),
+    Vue(),
 
     Components({
       // allow auto load markdown components under `./src/components/`
