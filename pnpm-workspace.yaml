@@ -1,3 +1,6 @@
+overrides:
+  shell-quote: 1.9.0
+
 allowBuilds:
   '@parcel/watcher': true
 minimumReleaseAgeExclude:
