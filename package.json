@@ -23,7 +23,7 @@
     "@koa/router": "^15.7.0",
     "@vueuse/core": "^14.3.0",
     "axios": "^1.18.1",
-    "concurrently": "^10.0.3",
+    "concurrently": "^10.0.4",
     "cors": "^2.8.6",
     "element-plus": "2.14.3",
     "express": "^5.2.1",
