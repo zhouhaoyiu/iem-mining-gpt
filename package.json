@@ -46,7 +46,7 @@
     "@types/koa-static": "^4.0.4",
     "@types/node": "^26.2.0",
     "@vitejs/plugin-vue": "^6.0.7",
-    "oxlint": "1.77.0",
+    "oxlint": "1.80.0",
     "sass": "^1.103.1",
     "typescript": "^7.0.2",
     "unocss": "^66.7.5",
