@@ -1,240 +1,57 @@
-<script setup>
-import { Delete as deleteIcon } from '@element-plus/icons-vue'
+<script setup lang="ts">
+import { Bot, Check, ChevronDown, Copy, RotateCcw, User } from '@lucide/vue'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-import { marked } from 'marked'
-import { ref, watch } from 'vue'
 import { useChatStore } from '~/stores/chatStore'
-
-const chatStore = useChatStore()
-const lastMessageRef = ref(null)
-
-// 配置 marked 选项
-marked.setOptions({
-  breaks: true, // 支持换行
-  gfm: true, // 支持 GitHub 风格的 Markdown
-  headerIds: false, // 禁用标题 ID
-  mangle: false, // 禁用标题 ID 混淆
+import { renderMarkdown } from '~/lib/markdown'
+const chat = useChatStore()
+const scroller = ref<HTMLElement | null>(null)
+const atBottom = ref(true)
+const copied = ref('')
+let copyTimer: ReturnType<typeof setTimeout> | undefined
+const lastId = computed(() => chat.messages.at(-1)?.id)
+function scrollBottom(smooth = false) {
+  const element = scroller.value
+  if (element) element.scrollTo({ top: element.scrollHeight, behavior: smooth ? 'smooth' : 'auto' })
+}
+function onScroll() {
+  const element = scroller.value
+  if (element) atBottom.value = element.scrollHeight - element.scrollTop - element.clientHeight < 80
+}
+watch(() => chat.messages.map(message => message.content + message.status).join(''), async () => {
+  if (atBottom.value) { await nextTick(); scrollBottom() }
 })
-
-// 监听新消息，自动滚动到底部
-watch(() => chatStore.chatHistory.length, () => {
-  setTimeout(() => {
-    if (lastMessageRef.value) {
-      lastMessageRef.value.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, 100)
-})
-
-function clearChat() {
-  chatStore.chatHistory = [{ role: 'system', content: '欢迎使用工力所GPT，请输入您的问题。' }]
-  ElMessage.success('对话已成功清空')
+watch(() => chat.activeId, async () => { atBottom.value = true; await nextTick(); scrollBottom() })
+async function copyMessage(id: string, content: string) {
+  try {
+    await navigator.clipboard.writeText(content)
+    copied.value = id
+    clearTimeout(copyTimer)
+    copyTimer = setTimeout(() => { copied.value = '' }, 1600)
+  } catch { ElMessage.error('复制失败，请检查浏览器剪贴板权限。') }
 }
-
-// 自定义渲染器
-const renderer = new marked.Renderer()
-renderer.code = ({ text, lang }) => {
-  return `<pre class="code-block"><code class="language-${escapeHtml(lang || '')}">${escapeHtml(text)}</code></pre>`
-}
-renderer.html = ({ text }) => {
-  return escapeHtml(text)
-}
-marked.use({ renderer })
-
-function escapeHtml(value) {
-  return String(value).replace(/[&<>"']/g, char => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    '\'': '&#39;',
-  }[char]))
-}
-
-function renderAssistant(content) {
-  return marked(content)
-}
+onBeforeUnmount(() => clearTimeout(copyTimer))
 </script>
-
 <template>
-  <div class="chat-container">
-    <div class="chat-messages">
-      <div
-        v-for="(message, index) in chatStore.chatHistory"
-        :key="index"
-        :ref="index === chatStore.chatHistory.length - 1 ? lastMessageRef : null"
-        class="message"
-        :class="[message.role]"
-      >
-        <div v-if="message.role === 'assistant'" class="message-content" v-html="renderAssistant(message.content)" />
-        <div v-else class="message-content">
-          {{ message.content }}
+  <section ref="scroller" class="message-scroller" aria-label="聊天消息" @scroll="onScroll">
+    <div v-if="!chat.messages.length" class="empty-chat"><span class="empty-mark"><Bot :size="38" /></span><h1>IEM GPT</h1></div>
+    <div v-else class="message-thread">
+      <article v-for="message in chat.messages" :key="message.id" class="message" :class="message.role" :data-status="message.status">
+        <div class="message-avatar"><Bot v-if="message.role === 'assistant'" :size="18" /><User v-else :size="17" /></div>
+        <div class="message-body">
+          <div class="message-author">{{ message.role === 'assistant' ? 'IEM GPT' : '你' }}<span v-if="message.status === 'streaming'" class="generating-label">生成中</span></div>
+          <div v-if="message.role === 'assistant'" class="markdown" v-html="renderMarkdown(message.content)" />
+          <div v-else class="user-content">{{ message.content }}</div>
+          <span v-if="message.status === 'streaming' && !message.content" class="thinking-indicator"><span /><span /><span /></span>
+          <div v-if="message.status === 'error'" class="message-error" role="alert">{{ message.error }}</div>
+          <div v-if="message.status === 'stopped'" class="message-stopped">已停止生成</div>
+          <div class="message-actions">
+            <button v-if="message.content" class="icon-button" :title="copied === message.id ? '已复制' : '复制消息'" :aria-label="copied === message.id ? '已复制' : '复制消息'" @click="copyMessage(message.id, message.content)"><Check v-if="copied === message.id" :size="15" /><Copy v-else :size="15" /></button>
+            <button v-if="message.role === 'assistant' && message.id === lastId && !chat.isSending" class="icon-button" title="重新生成" aria-label="重新生成" @click="chat.retry"><RotateCcw :size="15" /></button>
+          </div>
         </div>
-      </div>
+      </article>
     </div>
-    <el-tooltip content="清空对话" placement="top" :show-after="500">
-      <el-button
-        type="danger"
-        :icon="deleteIcon"
-        circle
-        class="clear-button"
-        @click="clearChat"
-      />
-    </el-tooltip>
-  </div>
+    <button v-if="!atBottom && chat.messages.length" class="scroll-bottom icon-button" title="跳到最新消息" aria-label="跳到最新消息" @click="scrollBottom(true)"><ChevronDown :size="18" /></button>
+  </section>
 </template>
-
-<style scoped>
-.chat-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  position: relative;
-  background-color: var(--ep-bg-color);
-}
-
-.chat-messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  scrollbar-width: thin;
-  scrollbar-color: var(--ep-border-color) transparent;
-
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: var(--ep-border-color);
-    border-radius: 3px;
-
-    &:hover {
-      background-color: var(--ep-border-color-darker);
-    }
-  }
-}
-
-.message {
-  max-width: 65%;
-  transition: all 0.3s ease;
-  animation: messageAppear 0.3s ease;
-}
-
-.message-content {
-  /* line-height: 1.3; */
-  word-wrap: break-word;
-  padding: 0.6rem 0.8rem;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  text-align: left;
-}
-
-.message.user {
-  align-self: flex-end;
-
-  .message-content {
-    background-color: var(--ep-color-primary);
-    color: white;
-    text-align: left;
-  }
-}
-
-.message.assistant .message-content {
-  background-color: var(--ep-fill-color-darker);
-  color: var(--ep-text-color-primary);
-  line-height: 1.3;
-  text-align: left;
-}
-
-.message.system {
-  align-self: center;
-  color: var(--ep-text-color-secondary);
-  font-size: 0.85em;
-  background-color: transparent;
-  text-align: center;
-  padding: 0.4rem 0;
-}
-
-.message-content :deep(pre) {
-  background-color: rgba(0, 0, 0, 0.08);
-  border-radius: 8px;
-  padding: 0.6rem;
-  margin: 0.4rem 0;
-  overflow-x: auto;
-}
-
-.message-content :deep(code) {
-  font-family: 'Fira Code', monospace;
-  font-size: 0.85em;
-}
-
-.message-content :deep(p) {
-  margin: 0.5rem 0;
-  line-height: 1.6;
-}
-
-.message-content :deep(ul),
-.message-content :deep(ol) {
-  margin: 1rem 0;
-  padding-left: 1.2rem;
-}
-
-.message-content :deep(li) {
-  margin: 0.5rem 0;
-}
-
-.message-content :deep(blockquote) {
-  border-left: 3px solid var(--ep-color-primary);
-  margin: 0.3rem 0;
-  padding: 0.2rem 0 0.2rem 0.8rem;
-  color: var(--ep-text-color-secondary);
-  background-color: var(--ep-fill-color-light);
-}
-
-@keyframes messageAppear {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.clear-button {
-  position: fixed;
-  bottom: 14rem;
-  right: 1rem;
-  opacity: 0.9;
-  transition: all 0.3s ease;
-  background-color: var(--ep-color-danger);
-  border: none;
-  color: white;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-
-  &:hover {
-    opacity: 1;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  }
-
-  &:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-}
-
-:deep(.el-tooltip__trigger) {
-  outline: none;
-}
-</style>

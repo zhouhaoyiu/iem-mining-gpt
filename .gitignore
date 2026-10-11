@@ -11,5 +11,7 @@ yarn.lock
 package-lock.json
 
 *.log
+output/playwright/
 .env
 apikey.js
+server/apiKey.js

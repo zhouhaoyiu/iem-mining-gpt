@@ -1,190 +1,48 @@
-<script lang="ts" setup>
-import { Position } from '@element-plus/icons-vue'
-import axios from 'axios'
-import { ref } from 'vue'
+<script setup lang="ts">
+import { ArrowUp, Square } from '@lucide/vue'
+import { computed, ref, watch } from 'vue'
 import { useChatStore } from '../../stores/chatStore'
-
-const inputMessage = ref('')
-const chatStore = useChatStore()
-const isSending = ref(false)
-
+defineEmits<{ settings: [] }>()
+const chat = useChatStore()
+const drafts = ref<Record<string, string>>({})
+const input = computed({ get: () => drafts.value[chat.activeId] || '', set: value => { drafts.value[chat.activeId] = value } })
+const inputElement = ref<HTMLTextAreaElement | null>(null)
+const tokenMissing = computed(() => chat.requiresToken && !chat.token)
+function resize() {
+  if (!inputElement.value) return
+  inputElement.value.style.height = 'auto'
+  inputElement.value.style.height = Math.min(inputElement.value.scrollHeight, 180) + 'px'
+}
+watch(input, resize, { flush: 'post' })
+watch(() => chat.activeId, () => { resize(); inputElement.value?.focus() }, { flush: 'post' })
 async function handleSend() {
-  if (inputMessage.value.trim() === '')
-    return
-
-  const messageToSend = inputMessage.value
-  chatStore.addMessage('user', messageToSend)
-  chatStore.addMessage('assistant', '')
-
-  isSending.value = true
-  let assistantMessage = ''
-  let lastProcessedLength = 0
-
-  try {
-    await axios.post('/api/chat', { message: messageToSend }, {
-      responseType: 'text',
-      onDownloadProgress: (progressEvent) => {
-        const chunk = progressEvent.event.target?.response
-        if (!chunk)
-          return
-
-        // 只处理新增的内容
-        const newContent = chunk.slice(lastProcessedLength)
-        lastProcessedLength = chunk.length
-
-        const lines = newContent.split('\n')
-
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            try {
-              const data = JSON.parse(line.slice(6))
-              if (data.content) {
-                assistantMessage += data.content
-                chatStore.updateLastMessage('assistant', assistantMessage)
-              }
-            }
-            catch (e) {
-              console.error('Error parsing SSE data:', e)
-            }
-          }
-        }
-      },
-    })
+  if (!input.value.trim() || chat.isSending || tokenMissing.value) return
+  const id = chat.activeId
+  const text = input.value
+  input.value = ''
+  const success = await chat.send(text)
+  if (!success && !drafts.value[id]) drafts.value[id] = text
+}
+function onKeydown(event: KeyboardEvent) {
+  if (event.key === 'Enter' && !event.shiftKey && !event.isComposing && event.keyCode !== 229) {
+    event.preventDefault()
+    void handleSend()
   }
-  catch (error) {
-    console.error('Error sending message:', error)
-  }
-  finally {
-    isSending.value = false
-  }
-
-  inputMessage.value = ''
 }
 </script>
-
 <template>
-  <div class="footer">
-    <div class="footer-content">
-      <div class="input-area">
-        <el-input
-          v-model="inputMessage"
-          placeholder="输入消息，Enter 发送，Shift + Enter 换行"
-          type="textarea"
-          :rows="4"
-          :disabled="isSending"
-          resize="none"
-          class="chat-input"
-          @keyup.enter="handleSend"
-          @keydown.shift.enter.prevent="inputMessage += '\n'"
-        />
-        <div class="button-wrapper">
-          <el-button
-            type="primary"
-            :disabled="!inputMessage.trim() || isSending"
-            :loading="isSending"
-            class="send-button"
-            @click="handleSend"
-          >
-            <el-icon v-if="!isSending">
-              <Position />
-            </el-icon>
-            <span v-else>思考中...</span>
-          </el-button>
-        </div>
-      </div>
+  <footer class="composer-region">
+    <div v-if="chat.connection === 'offline'" class="connection-notice" role="status">
+      <span>{{ chat.connectionError || '无法连接聊天服务。' }}</span><button @click="$emit('settings')">连接设置</button>
     </div>
-  </div>
+    <div v-else-if="tokenMissing" class="connection-notice" role="status"><span>需要访问令牌</span><button @click="$emit('settings')">连接设置</button></div>
+    <form class="composer" @submit.prevent="handleSend">
+      <textarea ref="inputElement" v-model="input" aria-label="消息" placeholder="输入消息…" rows="2" :disabled="chat.isSending" maxlength="20000" @keydown="onKeydown" />
+      <div class="composer-toolbar">
+        <span class="composer-state">{{ chat.isSending ? '正在生成' : 'IEM GPT' }}</span>
+        <button v-if="chat.isSending" class="send-button stop-button" type="button" title="停止生成" aria-label="停止生成" @click="chat.stop"><Square :size="17" /></button>
+        <button v-else class="send-button" type="submit" title="发送消息" aria-label="发送消息" :disabled="!input.trim() || tokenMissing"><ArrowUp :size="20" /></button>
+      </div>
+    </form>
+  </footer>
 </template>
-
-<style lang="scss" scoped>
-.footer {
-  background-color: var(--ep-bg-color);
-  padding: 1rem;
-  border-top: 1px solid var(--ep-border-color-light);
-}
-
-.footer-content {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.input-area {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  width: 100%;
-  background-color: var(--ep-bg-color);
-  padding: 1rem;
-  border-radius: 12px;
-  border: 1px solid var(--ep-border-color-light);
-
-  .chat-input {
-    width: 100%;
-
-    :deep(.el-textarea__inner) {
-      background-color: var(--ep-bg-color);
-      border: none;
-      color: var(--ep-text-color-primary);
-      transition: all 0.3s ease;
-      font-size: 0.9rem;
-      line-height: 1.3;
-      padding: 0.6rem;
-      resize: none;
-      box-shadow: none;
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: var(--ep-border-color) transparent;
-
-      &::-webkit-scrollbar {
-        width: 6px;
-      }
-
-      &::-webkit-scrollbar-track {
-        background: transparent;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background-color: var(--ep-border-color);
-        border-radius: 3px;
-
-        &:hover {
-          background-color: var(--ep-border-color-darker);
-        }
-      }
-
-      &:focus {
-        box-shadow: none;
-      }
-
-      &:disabled {
-        background-color: var(--ep-bg-color);
-        cursor: not-allowed;
-      }
-    }
-  }
-
-  .button-wrapper {
-    display: flex;
-    justify-content: flex-end;
-    padding: 0 0.5rem;
-  }
-
-  .send-button {
-    padding: 0.6rem 1.5rem;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-    background-color: var(--ep-color-primary);
-    border: none;
-    font-size: 0.9rem;
-
-    &:not(:disabled):hover {
-      background-color: var(--ep-color-primary-dark-2);
-      transform: translateY(-1px);
-    }
-
-    &.is-loading {
-      background-color: var(--ep-color-primary-light-5);
-    }
-  }
-}
-</style>

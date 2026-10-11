@@ -1,4 +1,4 @@
-import path from 'node:path'
+import { fileURLToPath, URL } from 'node:url'
 import Vue from '@vitejs/plugin-vue'
 
 import Unocss from 'unocss/vite'
@@ -12,7 +12,7 @@ import VueRouter from 'vue-router/vite'
 export default defineConfig({
   resolve: {
     alias: {
-      '~/': `${path.resolve(__dirname, 'src')}/`,
+      '~/': fileURLToPath(new URL('./src/', import.meta.url)),
     },
   },
 
@@ -52,9 +52,9 @@ export default defineConfig({
     // TODO: workaround until they support native ESM
     noExternal: ['element-plus'],
   },
-  build: {
-    chunkSizeWarningLimit: 100000000000,
-  },
 
   assetsInclude: ['**/*.pdf', '**/*.caj'],
+  server: {
+    proxy: { '/api': { target: process.env.API_PROXY_TARGET || 'http://127.0.0.1:3000', changeOrigin: true } },
+  },
 })

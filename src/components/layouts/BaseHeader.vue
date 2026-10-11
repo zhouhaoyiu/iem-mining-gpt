@@ -1,34 +1,19 @@
-<script lang="ts" setup>
-
+<script setup lang="ts">
+import { PanelLeft, Settings2 } from '@lucide/vue'
+import { useChatStore } from '../../stores/chatStore'
+defineEmits<{ 'toggle-sidebar': []; settings: [] }>()
+const chat = useChatStore()
 </script>
-
 <template>
-  <div class="header">
-    <span class="title">
-      IEM GPT
-    </span>
-    <!-- 最右边小字 created by zhy -->
-    <span class="author">created by 周浩宇</span>
-  </div>
+  <header class="chat-header">
+    <button class="icon-button mobile-only" title="会话列表" aria-label="会话列表" @click="$emit('toggle-sidebar')"><PanelLeft :size="20" /></button>
+    <div class="header-title"><span>{{ chat.activeConversation.title }}</span><span class="header-model">{{ chat.model || 'IEM GPT' }}</span></div>
+    <div class="header-actions">
+      <button class="connection-badge" :class="chat.connection" :title="chat.connectionError || chat.model" @click="$emit('settings')">
+        <span class="status-dot" />{{ chat.connection === 'ready' ? '已连接' : chat.connection === 'checking' ? '连接中' : '未连接' }}
+      </button>
+      <slot />
+      <button class="icon-button" title="连接设置" aria-label="连接设置" @click="$emit('settings')"><Settings2 :size="18" /></button>
+    </div>
+  </header>
 </template>
-
-<style lang="scss" scoped>
-.header {
-  background-color: var(--router-view-bg-color);
-  width: 100%;
-  height: 5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  .title {
-    font-size: 2rem;
-  }
-  .author {
-    position: absolute;
-    right: 1rem;
-    font-size: 0.8rem;
-    margin-left: 1rem;
-  }
-}
-</style>
