@@ -42,7 +42,7 @@ pnpm lint
 pnpm build
 ```
 
-Tests use mocked upstream responses and do not spend model API credits. They cover SSE framing, UTF-8 splits, authorization, message validation, conversation context, cancellation, failures, retry, and Markdown sanitization. Vue component checking uses `vue-tsc` with TypeScript 6; the current checker does not support the project's previous native TypeScript 7 CLI.
+Tests use mocked upstream responses and do not spend model API credits. They cover SSE framing, UTF-8 splits, authorization, message validation, conversation context, cancellation, failures, retry, and Markdown sanitization. The toolchain follows [Vue's upstream dual-install configuration](https://github.com/vuejs/language-tools/pull/6123): `@typescript/native` supplies the TypeScript 7 `tsc` CLI, while `typescript` aliases `@typescript/typescript6` for the JavaScript API used by `vue-tsc`. Type checking continues to cover TypeScript and Vue components, including templates.
 
 ## Conversation Data
 
