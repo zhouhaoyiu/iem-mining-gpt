@@ -3,9 +3,11 @@ overrides:
   nanoid@<3.3.18: 3.3.18
   pdfjs-dist: 6.2.108
   shell-quote: 1.11.0
-  undici: 7.29.1
-  qs: 6.16.0
   proxy-addr: 2.0.8
+  body-parser@>=2.0.0 <2.4.0: ^2.4.0
+  follow-redirects@>=1.16.0 <=1.16.1: ^1.16.2
+  qs@>=6.7.0 <=6.16.0: ^6.16.1
+  undici@>=7.0.0 <7.30.1: ^7.30.1
 
 allowBuilds:
   '@parcel/watcher': true
@@ -33,6 +35,10 @@ minimumReleaseAgeExclude:
   - '@unocss/transformer-variant-group@66.7.4'
   - '@unocss/vite@66.7.4'
   - unocss@66.7.4
+  - body-parser@2.4.0
+  - undici@7.30.1
+  - qs@6.16.1
+  - follow-redirects@1.16.2
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - esbuild
