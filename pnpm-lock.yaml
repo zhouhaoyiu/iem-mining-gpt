@@ -32,8 +32,8 @@ importers:
         specifier: ^15.7.1
         version: 15.7.1(koa@3.3.0)(supports-color@10.2.2)
       '@lucide/vue':
-        specifier: ^1.73.0
-        version: 1.73.0(vue@3.5.44(@typescript/typescript6@6.0.2))
+        specifier: ^1.77.0
+        version: 1.77.0(vue@3.5.44(@typescript/typescript6@6.0.2))
       '@vueuse/core':
         specifier: ^15.0.0
         version: 15.0.0(vue@3.5.44(@typescript/typescript6@6.0.2))
@@ -353,8 +353,8 @@ packages:
     peerDependencies:
       koa: ^2.0.0 || ^3.0.0
 
-  '@lucide/vue@1.73.0':
-    resolution: {integrity: sha512-QVVRSgu2rqRX3NAUktT9venW0Bvtr03aCZjhFRLwnV3uqLyR7KCTOx5mMlukhw0aiyjC3D6w2b+fmy4MeM5R3Q==}
+  '@lucide/vue@1.77.0':
+    resolution: {integrity: sha512-B+okr/d8qC2imLzNPJ5tW8Nf7uKC19DgiOafxU0bOMfLnkd5Tkss4GW640+s5FierTJjgl99LpuO40u+yni0qQ==}
     peerDependencies:
       vue: '>=3.0.1'
 
@@ -3173,7 +3173,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@lucide/vue@1.73.0(vue@3.5.44(@typescript/typescript6@6.0.2))':
+  '@lucide/vue@1.77.0(vue@3.5.44(@typescript/typescript6@6.0.2))':
     dependencies:
       vue: 3.5.44(@typescript/typescript6@6.0.2)
 
