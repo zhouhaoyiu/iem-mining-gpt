@@ -40,7 +40,7 @@
     "openai": "^7.57.0",
     "pinia": "^4.1.0",
     "vite-plugin-inspect": "^12.1.0",
-    "vue": "^3.5.44",
+    "vue": "^3.5.46",
     "vue-pdf-embed": "^2.1.7",
     "vue-router": "^5.4.0"
   },
