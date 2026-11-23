@@ -68,8 +68,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0(supports-color@10.2.2)
       marked:
-        specifier: ^18.1.1
-        version: 18.1.1
+        specifier: ^18.2.1
+        version: 18.2.1
       openai:
         specifier: ^7.57.0
         version: 7.57.0(undici@7.30.1)(zod@4.6.7)
@@ -2032,8 +2032,8 @@ packages:
   magic-string@1.4.3:
     resolution: {integrity: sha512-z12OxmaPGE0F4xlpGdjuAUckipLpQlTAuAmyGhNoD7ODpYUzvDfvtxUbjM/jwznyP178oju/KDdyi220wNJ0RQ==}
 
-  marked@18.1.1:
-    resolution: {integrity: sha512-zEGgrtUG8crk+TrMacJSVABU4DYDDkS8uqgU3ohrn/2fW9C2AEfUrO3m6IhpIpQpl7YcVpiXXC9cSMWDANT3dg==}
+  marked@18.2.1:
+    resolution: {integrity: sha512-ii4bxCTCqqwpT86XZWgJNs+ZnAIZksmLGYMViWA7PDIXYIeNo1x6cDdX3JOip9NM/cI6p8z57FxliACboTruMA==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -4758,7 +4758,7 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.6.0
 
-  marked@18.1.1: {}
+  marked@18.2.1: {}
 
   math-intrinsics@1.1.0: {}
 

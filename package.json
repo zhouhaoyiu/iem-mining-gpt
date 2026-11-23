@@ -36,7 +36,7 @@
     "koa": "^3.3.0",
     "koa-bodyparser": "^4.4.1",
     "koa-static": "^5.0.0",
-    "marked": "^18.1.1",
+    "marked": "^18.2.1",
     "openai": "^7.57.0",
     "pinia": "^4.1.0",
     "vite-plugin-inspect": "^12.1.0",
